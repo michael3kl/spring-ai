@@ -1,6 +1,6 @@
-package com.michael.BelajarAI.controller;
+package com.michael.SpringAI.controller;
 
-import com.michael.BelajarAI.service.AiService;
+import com.michael.SpringAI.service.AiService;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 

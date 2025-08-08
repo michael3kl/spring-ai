@@ -1,13 +1,13 @@
-package com.michael.BelajarAI;
+package com.michael.SpringAI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BelajarAiApplication {
+public class SpringAiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BelajarAiApplication.class, args);
+		SpringApplication.run(SpringAiApplication.class, args);
 	}
 
 }
