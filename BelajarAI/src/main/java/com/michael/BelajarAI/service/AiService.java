@@ -13,9 +13,9 @@ public class AiService {
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
 
-    public AiService(@Value("${openrouter.api.key}") String apiKey) {
+    public AiService(@Value("${spring.ai.openai.base-url}") String webUrl ,@Value("${openrouter.api.key}") String apiKey) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://openrouter.ai/api/v1")
+                .baseUrl(webUrl)
                 .defaultHeader("Authorization", "Bearer " + apiKey)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
