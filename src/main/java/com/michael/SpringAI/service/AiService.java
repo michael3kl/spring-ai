@@ -19,7 +19,7 @@ public class AiService {
                 .defaultHeader("Authorization", "Bearer " + apiKey)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
-        this.objectMapper = new ObjectMapper(); // inisialisasi ObjectMapper
+        this.objectMapper = new ObjectMapper();
     }
 
     public Mono<String> chat(String userMessage) {
@@ -39,6 +39,8 @@ public class AiService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(response -> {
+                    System.out.println("RESPONSE FROM API");
+                    System.out.println(response);
                     try {
                         JsonNode jsonNode = objectMapper.readTree(response);
                         return jsonNode
