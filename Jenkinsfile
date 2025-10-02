@@ -5,8 +5,7 @@ pipeline {
         APP_NAME = "springai"
         PROJECT = "michael3kl-dev"
         BASE_IMAGE = "registry.access.redhat.com/ubi8/openjdk-17"
-        ACCESS_TOKEN_OCP = credentials('ocp-token') 
-        // 'ocp-token' = ID credential yang kamu buat di Jenkins (secret text)
+        ACCESS_TOKEN_OCP = credentials('OCP-TOKEN') 
     }
 
     stages {
