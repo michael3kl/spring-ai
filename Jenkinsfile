@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  tools {
+        maven "Maven3"
+  }
   environment {
     OCP_TOKEN   = credentials('ocp-token')
     OCP_SERVER  = 'https://api.rm1.0a51.p1.openshiftapps.com:6443'
