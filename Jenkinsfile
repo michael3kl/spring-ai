@@ -2,34 +2,53 @@ pipeline {
     agent any
 
     environment {
-        OCP_TOKEN = credentials('OCP-TOKEN')  
-        OCP_SERVER = 'https://api.rm1.0a51.p1.openshiftapps.com:6443'
+        APP_NAME = "springai"
+        PROJECT = "michael3kl-dev"
+        BASE_IMAGE = "registry.access.redhat.com/ubi8/openjdk-17"
+        ACCESS_TOKEN_OCP = credentials('ocp-token') 
+        // 'ocp-token' = ID credential yang kamu buat di Jenkins (secret text)
     }
 
     stages {
-        stage('Build') {
+        stage('Build Spring Boot') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Login to OCP') {
+        stage('Login OCP') {
             steps {
-                sh """
-                oc login --token=$OCP_TOKEN --server=$OCP_SERVER
-                oc project $OCP_PROJECT
-                """
+                bat '''
+                oc login --token=%ACCESS_TOKEN_OCP% --server=https://api.rm1.0a51.p1.openshiftapps.com:6443 --insecure-skip-tls-verify=true
+                oc project %PROJECT%
+                '''
             }
         }
 
-        stage('Build & Deploy to OCP') {
+        stage('BuildConfig & Build Image') {
             steps {
-                sh """
-                oc new-build --binary --name=spring-ai --strategy=source || true
-                oc start-build spring-ai --from-dir=. --wait
-                oc new-app spring-ai || true
-                oc expose svc/spring-ai || true
-                """
+                bat '''
+                oc get bc %APP_NAME% 1>nul 2>nul
+                if %ERRORLEVEL% NEQ 0 (
+                  oc new-build %BASE_IMAGE% --name=%APP_NAME% --binary=true
+                )
+                oc start-build %APP_NAME% --from-file=target\\*.jar --follow --wait
+                '''
+            }
+        }
+
+        stage('Deploy to OCP') {
+            steps {
+                bat '''
+                oc get deploy %APP_NAME% 1>nul 2>nul
+                if %ERRORLEVEL% NEQ 0 (
+                  oc new-app %APP_NAME%:latest --name=%APP_NAME%
+                  oc expose svc/%APP_NAME%
+                ) else (
+                  oc rollout restart deploy/%APP_NAME%
+                )
+                oc rollout status deploy/%APP_NAME% --timeout=120s
+                '''
             }
         }
     }
