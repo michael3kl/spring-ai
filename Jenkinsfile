@@ -34,6 +34,9 @@ pipeline {
         oc expose svc/%APP_NAME% || echo "Route exists"
         oc rollout status deploy/%APP_NAME% --timeout=120s
         oc get all -n %OCP_PROJECT%
+        oc get pods -n michael3kl-dev
+        oc get svc -n michael3kl-dev
+        oc get route -n michael3kl-dev
         """
       }
     }
